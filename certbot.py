@@ -57,8 +57,6 @@ def main():
 
     #CONNECT TO DEVICE
     try:
-      hostnamejson = ss.runCmds( 1, ['show hostname'])
-      hostname = hostnamejson[0]['hostname']
       remove_certificate = ss.runCmds ( 1, [ 'enable', 'bash timeout 10 rm -rf /tmp/cert.cer'])
       remove_key = ss.runCmds ( 1, [ 'enable', 'bash timeout 10 rm -rf /tmp/cert.key'])
       for line in certparsed:
