@@ -61,8 +61,8 @@ def main():
     #CONNECT TO DEVICE
     try:
       remove_certificate = ss.runCmds ( 1, [ 'enable', 'bash timeout 10 rm -rf /tmp/cert*'])
-      upload_cert = ss.runCmds ( 1, [ 'enable', 'bash timeout 2 echo "'+cert_stripped+'" >> /tmp/certcer.tmp', 'bash timeout 2 base64 -d /tmp/certcer.tmp > /tmp/cert.cer'])
-      upload_key = ss.runCmds ( 1, [ 'enable', 'bash timeout 2 echo "'+key_stripped+'" >> /tmp/certkey.tmp', 'bash timeout 2 base64 -d /tmp/certkey.tmp > /tmp/cert.key'])
+      upload_cert = ss.runCmds ( 1, [ 'enable', 'bash timeout 2 echo "'+cert_stripped+'" > /tmp/certcer.tmp', 'bash timeout 2 base64 -d /tmp/certcer.tmp > /tmp/cert.cer'])
+      upload_key = ss.runCmds ( 1, [ 'enable', 'bash timeout 2 echo "'+key_stripped+'" > /tmp/certkey.tmp', 'bash timeout 2 base64 -d /tmp/certkey.tmp > /tmp/cert.key'])
       response = ss.runCmds( 1, [ 'enable', 'copy file:/tmp/cert.cer certificate:cert',
                                   'copy file:/tmp/cert.key sslkey:certkey'])
       response2 = ss.runCmds( 1, [ 'enable', 'configure', 'management security',
