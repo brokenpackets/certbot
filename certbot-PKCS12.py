@@ -2,8 +2,14 @@
 from getpass import getpass
 from jsonrpclib import Server
 import json
+from OpenSSL import crypto
 import ssl
 import base64
+
+## Path to SSL Certificate in PKCS12 Format
+
+certlocation = 'cert.p12'
+certpass = 'Arista'
 
 #CREDS
 user = raw_input("Enter username: ")
@@ -16,38 +22,14 @@ dev_list = ['192.168.255.5',
             '192.168.255.7',
             '192.168.255.8']
 
-### Certificate Info - expected to be PEM format.
-# Replace with your own cert and key.
-cert = """\
------BEGIN CERTIFICATE-----
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
------END CERTIFICATE-----"""
+
+p12 = crypto.load_pkcs12(open(certlocation, 'rb').read(), certpass)
+
+cert = crypto.dump_certificate(crypto.FILETYPE_PEM, p12.get_certificate())
 cert_encoded = cert.encode('base64','strict')
 cert_stripped = cert_encoded.replace('\n','')
 
-cert_key = """\
------BEGIN RSA PRIVATE KEY-----
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
-MIIGJTCCBA2gAwIBAgIBAjANBgkqhkiG9w0BAQUFADCBsjELMAkGA1UEBhMCRlIx
------END RSA PRIVATE KEY-----"""
+cert_key = crypto.dump_privatekey(crypto.FILETYPE_PEM, p12.get_privatekey())
 key_encoded = cert_key.encode('base64','strict')
 key_stripped = key_encoded.replace('\n','')
 
